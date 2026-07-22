@@ -22,9 +22,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .hdr{background:var(--text);color:#fff;padding:32px 32px 24px;}
 .hdr h1{font-size:20px;font-weight:700;margin-bottom:6px;}
 .hdr p{font-size:12px;color:#b0aea8;line-height:1.6;}
-.hdr-staff{margin-top:16px;display:flex;align-items:center;gap:10px;}
-.hdr-staff label{font-size:12px;color:#b0aea8;font-weight:700;}
-.hdr-staff input{padding:7px 12px;border-radius:6px;border:none;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--text);min-width:160px;outline:none;}
 
 .principle-bar{background:#1a3a28;color:#fff;padding:14px 32px;}
 .principle-bar h3{font-size:11px;font-weight:700;letter-spacing:.08em;color:#7abf9a;margin-bottom:8px;}
@@ -180,10 +177,6 @@ textarea:focus{border-color:var(--green);background:#fff;}
 <div class="hdr">
   <h1>新規対応 振り返りシート</h1>
   <p>評価するのは先生ではなく「症例」。患者さんが何を話せたかを起点に振り返る。</p>
-  <div class="hdr-staff">
-    <label>担当者名</label>
-    <input type="text" id="mStaff" placeholder="例）福本">
-  </div>
 </div>
 
 <div class="principle-bar">
@@ -546,7 +539,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   document.getElementById('btnGen').addEventListener('click', function() {
-    var staff   = document.getElementById('mStaff').value.trim();
     var pract   = document.getElementById('mPractitioner').value.trim();
     var name    = document.getElementById('mName').value.trim();
     var age     = document.getElementById('mAge').value.trim();
@@ -593,7 +585,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     var lines = ['【振り返りシート】'];
-    if(staff) lines.push('担当者：'+staff);
     if(pract) lines.push('施術者：'+pract);
     var patientInfo = [name, age, shuso].filter(Boolean).join('　');
     if(patientInfo) lines.push('患者情報：'+patientInfo);
@@ -666,7 +657,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('input[name="plan"]').forEach(function(r){ r.checked=false; });
     document.querySelectorAll('input[name="nextappt"]').forEach(function(r){ r.checked=false; });
     document.querySelectorAll('input[name="source"]').forEach(function(r){ r.checked=false; });
-    ['mStaff','mName','mAge','mShuSo','mInfo','mKomari','mRiso','mFuan','mImpact','mChange','mHG','mHB','mEG','mEB','mNext','mFree'].forEach(function(id){ document.getElementById(id).value=''; });
+    ['mName','mAge','mShuSo','mInfo','mKomari','mRiso','mFuan','mImpact','mChange','mHG','mHB','mEG','mEB','mNext','mFree'].forEach(function(id){ document.getElementById(id).value=''; });
     document.querySelectorAll('input[name="question"]').forEach(function(r){ r.checked=false; });
     document.getElementById('scoreSelf').value = 50;
     document.getElementById('vSelf').textContent = 50;
