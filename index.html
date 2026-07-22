@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新規対応 振り返りシート</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+:root {
+  --bg:#f8f7f4; --card:#fff; --border:#e8e5df;
+  --text:#1a1a18; --sub:#6b6b67; --muted:#9e9d98;
+  --green:#1a5c3a; --gl:#eaf3ee; --gm:#b8d9c4;
+  --blue:#1e3d7a; --bl:#eaeffa; --bm:#b8c8e8;
+  --warn:#7a5c1e; --wl:#faf3ea;
+  --red:#7a1e1e; --rl:#faeaea;
+  --pur:#5c1a5a; --pl:#f5eaf5;
+  --orange:#8a3a00; --ol:#fff3ea;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.7;}
+
+.hdr{background:var(--text);color:#fff;padding:32px 32px 24px;}
+.hdr h1{font-size:20px;font-weight:700;margin-bottom:6px;}
+.hdr p{font-size:12px;color:#b0aea8;line-height:1.6;}
+.hdr-staff{margin-top:16px;display:flex;align-items:center;gap:10px;}
+.hdr-staff label{font-size:12px;color:#b0aea8;font-weight:700;}
+.hdr-staff input{padding:7px 12px;border-radius:6px;border:none;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--text);min-width:160px;outline:none;}
+
+.principle-bar{background:#1a3a28;color:#fff;padding:14px 32px;}
+.principle-bar h3{font-size:11px;font-weight:700;letter-spacing:.08em;color:#7abf9a;margin-bottom:8px;}
+.principle-list{display:flex;flex-wrap:wrap;gap:8px 24px;}
+.principle-list li{font-size:12px;color:#c8e8d8;list-style:none;padding-left:16px;position:relative;}
+.principle-list li::before{content:'✦';position:absolute;left:0;color:#4a9a6a;font-size:10px;}
+
+.howto{background:#f0ede8;border-bottom:1px solid var(--border);padding:12px 32px;font-size:12px;color:var(--sub);}
+.main{max-width:820px;margin:0 auto;padding:24px 16px 80px;}
+
+.card{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:18px;}
+.card-hdr{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border);}
+.card-icon{font-size:18px;}
+.card-title{font-size:14px;font-weight:700;}
+.card-body{padding:16px 20px;}
+
+/* 患者理解セクション */
+.patient-word-box{background:#fafaf8;border-radius:10px;border:1px solid var(--border);margin-bottom:12px;overflow:hidden;}
+.patient-word-hdr{padding:9px 14px;font-size:12px;font-weight:700;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;}
+.patient-word-hdr.困{background:#eaf3ee;color:var(--green);}
+.patient-word-hdr.理想{background:#eaeffa;color:var(--blue);}
+.patient-word-hdr.不安{background:var(--wl);color:var(--warn);}
+.patient-word-body{padding:10px 14px;}
+.rule-note{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:6px;}
+.rule-note span{color:var(--red);font-weight:700;font-style:normal;}
+textarea{
+  width:100%;border:1px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-family:'Noto Sans JP',sans-serif;
+  font-size:13px;line-height:1.7;color:var(--text);
+  background:#fff;resize:vertical;outline:none;
+  transition:border-color .15s;min-height:56px;
+}
+textarea:focus{border-color:var(--green);background:#fff;}
+
+/* スコア */
+.axis-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+@media(max-width:560px){.axis-grid{grid-template-columns:1fr;}}
+.axis-box{border-radius:10px;padding:14px 16px;border:1px solid;}
+.axis-box.g{background:var(--gl);border-color:var(--gm);}
+.axis-box.b{background:var(--bl);border-color:var(--bm);}
+.axis-title{font-size:13px;font-weight:700;margin-bottom:6px;}
+.axis-box.g .axis-title{color:var(--green);}
+.axis-box.b .axis-title{color:var(--blue);}
+.axis-box p{font-size:12px;color:var(--sub);line-height:1.7;}
+.warn-box{background:var(--wl);border-left:3px solid var(--warn);border-radius:0 8px 8px 0;padding:10px 14px;font-size:12px;color:var(--warn);line-height:1.7;}
+.score-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.score-lbl{font-size:12px;font-weight:700;width:110px;flex-shrink:0;}
+.score-lbl.g{color:var(--green);}
+.score-lbl.b{color:var(--blue);}
+.score-val{font-size:16px;font-weight:700;width:28px;text-align:right;flex-shrink:0;}
+.score-val.g{color:var(--green);}
+.score-val.b{color:var(--blue);}
+.score-total{background:var(--text);color:#fff;border-radius:8px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+.score-num{font-size:24px;font-weight:700;}
+
+/* チェックリスト */
+.cl-section{margin-bottom:18px;}
+.cl-label{font-size:12px;font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.cl-label.g{color:var(--green);}
+.cl-label.b{color:var(--blue);}
+.cl-sublabel{font-size:11px;color:var(--muted);font-weight:400;margin-left:4px;}
+.checklist{background:#f8f8f6;border-radius:8px;border:1px solid var(--border);overflow:hidden;}
+.ci input[type=checkbox]{display:none;}
+.ci label{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:9px 14px;border-bottom:1px solid #eeece8;
+  cursor:pointer;font-size:13px;color:var(--text);line-height:1.6;
+  transition:background .12s;
+}
+.ci:last-child label{border-bottom:none;}
+.ci label:hover{background:#f0ede8;}
+.ci label::before{
+  content:'';width:16px;height:16px;flex-shrink:0;margin-top:2px;
+  border:2px solid #bbb;border-radius:3px;background:#fff;
+  transition:all .15s;
+}
+.ci input:checked + label{color:var(--muted);text-decoration:line-through;}
+.ci input:checked + label::before{
+  background:var(--green);border-color:var(--green);
+  content:'✓';color:#fff;font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.ci.b input:checked + label::before{background:var(--blue);border-color:var(--blue);}
+
+/* 話した割合 */
+.ratio-grid{display:flex;flex-direction:column;gap:8px;}
+.ratio-opt input[type=radio]{display:none;}
+.ratio-opt label{
+  display:flex;align-items:center;gap:12px;padding:10px 14px;
+  border-radius:8px;border:1px solid var(--border);cursor:pointer;
+  font-size:13px;background:#fafaf8;transition:all .15s;
+}
+.ratio-opt label:hover{background:#f0ede8;}
+.ratio-opt input:checked + label{background:var(--bl);border-color:var(--bm);color:var(--blue);font-weight:700;}
+.ratio-bar{height:8px;border-radius:4px;flex:1;overflow:hidden;background:#e8e5df;display:flex;}
+.ratio-bar .p-side{background:var(--green);}
+.ratio-bar .s-side{background:var(--blue);}
+.ratio-ideal{font-size:11px;color:#4a9a6a;font-weight:700;}
+
+/* パターン */
+.pat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:560px){.pat-grid{grid-template-columns:1fr;}}
+.pat input[type=checkbox]{display:none;}
+.pat label{
+  display:block;border-radius:8px;padding:12px 14px;border:2px solid transparent;
+  cursor:pointer;transition:box-shadow .15s,transform .1s;user-select:none;
+}
+.pat label:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.pat.pa label{background:var(--gl);border-color:var(--gm);color:var(--green);}
+.pat.pb label{background:var(--wl);border-color:#d4a860;color:var(--warn);}
+.pat.pc label{background:var(--rl);border-color:#d4a0a0;color:var(--red);}
+.pat.pd label{background:var(--pl);border-color:#c4a0c4;color:var(--pur);}
+.pat input:checked + label{box-shadow:0 0 0 2px currentColor;}
+.pat-title{font-size:12px;font-weight:700;margin-bottom:4px;}
+.pat-desc{font-size:12px;line-height:1.6;}
+.pat-fix{font-size:11px;margin-top:6px;opacity:.85;line-height:1.5;}
+
+/* メモ */
+.memo-row{margin-bottom:13px;}
+.memo-lbl{font-size:12px;font-weight:700;color:var(--sub);margin-bottom:5px;letter-spacing:.04em;}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+.btn{padding:9px 20px;border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:opacity .15s,transform .1s;}
+.btn:hover{opacity:.85;transform:translateY(-1px);}
+.btn-p{background:var(--text);color:#fff;}
+.btn-s{background:var(--border);color:var(--sub);}
+.btn-c{background:var(--gl);color:var(--green);border:1px solid var(--gm);}
+.output{display:none;margin-top:14px;background:#f0ede8;border-radius:8px;padding:14px;font-size:12px;line-height:1.8;white-space:pre-wrap;color:var(--text);border:1px solid var(--border);}
+.tip{background:#eaf3f3;border-left:3px solid #1a5c5c;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#1a4a4a;line-height:1.6;margin-top:14px;}
+.divider{height:1px;background:var(--border);margin:14px 0;}
+
+/* 次回使う質問 */
+.question-box{background:var(--ol);border:2px solid #d4884a;border-radius:10px;padding:14px 16px;margin-bottom:0;}
+.question-box .q-hdr{font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.question-box textarea{background:#fff;border-color:#d4884a;}
+.question-box textarea:focus{border-color:var(--orange);}
+
+/* プラン・予約選択 */
+.pill-group{display:flex;flex-wrap:wrap;gap:8px;}
+.pill input[type=radio]{display:none;}
+.pill label{
+  display:inline-block;padding:7px 14px;border-radius:20px;border:1px solid var(--border);
+  cursor:pointer;font-size:12px;background:#fafaf8;transition:all .15s;
+}
+.pill label:hover{background:#f0ede8;}
+.pill input:checked + label{background:var(--bl);border-color:var(--bm);color:var(--blue);font-weight:700;}
+
+/* 自由記述 */
+.free-note-card .card-body textarea{min-height:120px;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>新規対応 振り返りシート</h1>
+  <p>評価するのは先生ではなく「症例」。患者さんが何を話せたかを起点に振り返る。</p>
+  <div class="hdr-staff">
+    <label>担当者名</label>
+    <input type="text" id="mStaff" placeholder="例）福本">
+  </div>
+</div>
+
+<div class="principle-bar">
+  <h3>NAORU 新規対応 5原則</h3>
+  <ul class="principle-list">
+    <li>患者さんを治す前に、患者さんを理解する。</li>
+    <li>質問より共感。話を広げるより、感情を受け止める。</li>
+    <li>患者さんの言葉を、そのまま未来の提案に使う。</li>
+    <li>不安が出たら説明ではなく、まず理由を聞く。</li>
+    <li>今日の振り返りは「自分を評価するため」ではなく、「次の患者さんをもっと理解するため」に行う。</li>
+  </ul>
+</div>
+
+<div class="howto"><strong>使い方：</strong>①患者さんの言葉を記録 → ②チェックリストで確認 → ③パターンを選ぶ → ④次回使う質問を1つ決める → ⑤「まとめる」でテキスト生成 → オーナーへ送る</div>
+
+<div class="main">
+
+<!-- 施術者 -->
+<div class="card">
+  <div class="card-body" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <div class="memo-lbl" style="margin-bottom:0;white-space:nowrap;">👤 施術者</div>
+    <input type="text" id="mPractitioner" placeholder="例）福本" style="flex:1;min-width:160px;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--text);background:#fff;outline:none;transition:border-color .15s;">
+  </div>
+</div>
+
+<!-- 患者情報 -->
+<div class="card">
+  <div class="card-hdr"><span class="card-icon">🧑</span><div class="card-title">患者情報</div></div>
+  <div class="card-body">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div>
+        <div class="memo-lbl" style="margin-bottom:4px;">名前</div>
+        <input type="text" id="mName" placeholder="例）野口さん" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--text);background:#fff;outline:none;transition:border-color .15s;">
+      </div>
+      <div>
+        <div class="memo-lbl" style="margin-bottom:4px;">年齢・性別</div>
+        <input type="text" id="mAge" placeholder="例）40代・男性" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--text);background:#fff;outline:none;transition:border-color .15s;">
+      </div>
+      <div>
+        <div class="memo-lbl" style="margin-bottom:4px;">主訴</div>
+        <input type="text" id="mShuSo" placeholder="例）首肩こり・頭痛" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--text);background:#fff;outline:none;transition:border-color .15s;">
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <div class="memo-lbl" style="margin-bottom:6px;">プラン入会の有無</div>
+      <div class="pill-group">
+        <div class="pill"><input type="radio" name="plan" id="planNaoru" value="NAORU"><label for="planNaoru">NAORU</label></div>
+        <div class="pill"><input type="radio" name="plan" id="planLight" value="ライト"><label for="planLight">ライト</label></div>
+        <div class="pill"><input type="radio" name="plan" id="planBody" value="ボディケア"><label for="planBody">ボディケア</label></div>
+        <div class="pill"><input type="radio" name="plan" id="planNone" value="未入会"><label for="planNone">未入会</label></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <div class="memo-lbl" style="margin-bottom:6px;">次回予約</div>
+      <div class="pill-group">
+        <div class="pill"><input type="radio" name="nextappt" id="apptYes" value="有り"><label for="apptYes">有り</label></div>
+        <div class="pill"><input type="radio" name="nextappt" id="apptNo" value="無し"><label for="apptNo">無し</label></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <div class="memo-lbl" style="margin-bottom:6px;">予約媒体</div>
+      <div class="pill-group">
+        <div class="pill"><input type="radio" name="source" id="srcMeta" value="メタ"><label for="srcMeta">メタ</label></div>
+        <div class="pill"><input type="radio" name="source" id="srcHpb" value="HPB"><label for="srcHpb">HPB</label></div>
+        <div class="pill"><input type="radio" name="source" id="srcHp" value="HP"><label for="srcHp">HP</label></div>
+        <div class="pill"><input type="radio" name="source" id="srcChirashi" value="チラシ"><label for="srcChirashi">チラシ</label></div>
+        <div class="pill"><input type="radio" name="source" id="srcThreads" value="スレッズ"><label for="srcThreads">スレッズ</label></div>
+        <div class="pill"><input type="radio" name="source" id="srcGmap" value="Googleマップ"><label for="srcGmap">Googleマップ</label></div>
+        <div class="pill"><input type="radio" name="source" id="srcOther" value="その他"><label for="srcOther">その他</label></div>
+      </div>
+    </div>
+
+    <div class="memo-row">
+      <div class="memo-lbl">特徴・生活背景（仕事・家族・趣味など）</div>
+      <textarea id="mInfo" rows="2" placeholder="例）4月から転職・デスクワーク・睡眠が浅い・子どもが2人・週末はランニングをしている"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- 患者理解（最重要） -->
+<div class="card">
+  <div class="card-hdr"><span class="card-icon">💬</span><div class="card-title">患者理解（最重要）── 患者さんの言葉をそのまま記録する</div></div>
+  <div class="card-body">
+
+    <div class="warn-box" style="margin-bottom:16px;">
+      ⚠️ <strong>解釈禁止ルール：</strong>先生の要約・解釈は書かない。患者さんが実際に言った言葉をそのまま書く。<br>
+      ❌「楽になりたい」（要約）　→　✅「仕事終わりに子どもと遊べるくらい元気でいたい」（患者さんの言葉）
+    </div>
+
+    <div class="patient-word-box">
+      <div class="patient-word-hdr 困">😣 患者さんが話した「困っていること」</div>
+      <div class="patient-word-body">
+        <div class="rule-note">患者さんが実際に使った言葉で書く。<span>要約しない。</span></div>
+        <textarea id="mKomari" rows="3" placeholder="例）「夕方になると頭が痛くなる」「休日も疲れて寝てしまう」「朝起きると腰がつらい」"></textarea>
+      </div>
+    </div>
+
+    <div class="patient-word-box">
+      <div class="patient-word-hdr 理想">✨ 患者さんが話した「理想の生活」</div>
+      <div class="patient-word-body">
+        <div class="rule-note">患者さんが実際に使った言葉で書く。<span>状態ではなく生活の言葉が出たか。</span></div>
+        <textarea id="mRiso" rows="3" placeholder="例）「姿勢を良くして楽に仕事したい」「休日に元気に出掛けたい」「ランニングをまた始めたい」"></textarea>
+      </div>
+    </div>
+
+    <div class="patient-word-box">
+      <div class="patient-word-hdr 不安">🤔 患者さんが話した「不安・迷い」</div>
+      <div class="patient-word-body">
+        <div class="rule-note">患者さんが実際に使った言葉で書く。<span>「高い」「考えます」はその理由まで聞けたか。</span></div>
+        <textarea id="mFuan" rows="3" placeholder="例）「毎週通えるかちょっと心配です」「仕事が忙しいので来れるか分からない」"></textarea>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;background:#f8f7f4;border-radius:8px;padding:12px 14px;border:1px solid var(--border);">
+      <div style="font-size:12px;font-weight:700;color:var(--sub);margin-bottom:6px;">💬 今日患者さんが言った一番印象に残った言葉</div>
+      <div class="rule-note" style="margin-bottom:6px;">この言葉を起点にフィードバックが始まる。1文だけ書く。患者さんが実際に使った言葉をそのまま書く。</div>
+      <textarea id="mImpact" rows="2" placeholder="良い例）「朝しがみついて起きているんです」「9月のドレスに間に合わせたいんです」&#10;惜しい例）「楽になりたいと言っていた」→患者さんの実際の言葉ではなく先生の要約になっている"></textarea>
+    </div>
+
+    <div style="margin-top:12px;background:#fff8f0;border-radius:8px;padding:12px 14px;border:2px solid #d4884a;">
+      <div style="font-size:12px;font-weight:700;color:var(--orange);margin-bottom:6px;">🔄 今回一番印象が変わった患者さんの一言・場面</div>
+      <div class="rule-note" style="margin-bottom:6px;">施術の中で患者さんの反応・言葉が変わった瞬間を書く。変わった場面がなかった場合はその旨を書く。</div>
+      <textarea id="mChange" rows="2" placeholder="良い例）「B/Aで首が回った瞬間に『えっ、全然違う』と言って前のめりになった」&#10;良い例）「費用の話に入った途端に口数が減った」&#10;惜しい例）「笑ってくれた」→どの場面でどう変わったかが分からない"></textarea>
+    </div>
+
+    <div style="margin-top:12px;background:#f0f5fa;border-radius:8px;padding:12px 14px;border:1px solid #b8c8e8;">
+      <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:8px;">🙋 患者さんから質問はありましたか？</div>
+      <div class="ratio-grid">
+        <div class="ratio-opt"><input type="radio" name="question" id="q3" value="多かった"><label for="q3"><span style="font-size:16px;">💬</span>&nbsp;多かった（3回以上）<span class="ratio-ideal" style="margin-left:auto;">→ 興味・期待が高い状態</span></label></div>
+        <div class="ratio-opt"><input type="radio" name="question" id="q2" value="少しあった"><label for="q2"><span style="font-size:16px;">🗨️</span>&nbsp;少しあった（1〜2回）</label></div>
+        <div class="ratio-opt"><input type="radio" name="question" id="q1" value="ほぼなかった"><label for="q1"><span style="font-size:16px;">🤐</span>&nbsp;ほぼなかった<span class="ratio-ideal" style="margin-left:auto;color:#c06040;">→ 不信・迷い・緊張の可能性</span></label></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 自己スコア -->
+<div class="card">
+  <div class="card-hdr"><span class="card-icon">📊</span><div class="card-title">今日の自己スコア</div></div>
+  <div class="card-body">
+    <div class="axis-grid">
+      <div class="axis-box g">
+        <div class="axis-title">🧠 頭の理解（論理・メリット）</div>
+        <p>「通ったら良くなる」と頭で納得してもらうための説明力。根本原因・B/A・期間・緊急性など。</p>
+      </div>
+      <div class="axis-box b">
+        <div class="axis-title">❤️ 心の理解（感情・信頼感）</div>
+        <p>「この人に任せたい」と感じてもらうための関係性づくり。患者さんが話せた量・共感・深掘りなど。</p>
+      </div>
+    </div>
+    <div class="score-row">
+      <div class="score-lbl g">🧠 頭の理解</div>
+      <input type="range" id="scoreH" min="0" max="10" value="5" style="flex:1;accent-color:#1a5c3a;cursor:pointer;" oninput="document.getElementById('vH').textContent=this.value;updateTotal();">
+      <div class="score-val g" id="vH">5</div>
+    </div>
+    <div class="score-row">
+      <div class="score-lbl b">❤️ 心の理解</div>
+      <input type="range" id="scoreE" min="0" max="10" value="5" style="flex:1;accent-color:#1e3d7a;cursor:pointer;" oninput="document.getElementById('vE').textContent=this.value;updateTotal();">
+      <div class="score-val b" id="vE">5</div>
+    </div>
+    <div class="score-total">
+      <div>
+        <div style="font-size:11px;color:#b0aea8;margin-bottom:2px;">総合スコア（/20）</div>
+        <div id="scoreComment" style="font-size:12px;color:#d0cec8;">–</div>
+      </div>
+      <div class="score-num" id="scoreTotal">10</div>
+    </div>
+  </div>
+</div>
+
+<!-- チェックリスト -->
+<div class="card">
+  <div class="card-hdr"><span class="card-icon">✅</span><div class="card-title">チェックリスト</div></div>
+  <div class="card-body">
+
+    <div class="cl-section">
+      <div class="cl-label g">🧠 頭の理解チェック<span class="cl-sublabel">（先生が何をしたか）</span></div>
+      <div class="checklist">
+        <div class="ci"><input type="checkbox" id="h1"><label for="h1">症状の根本原因を分かりやすく簡潔に説明できたか？</label></div>
+        <div class="ci"><input type="checkbox" id="h2"><label for="h2">整体歴を深掘りして「戻っちゃう理由・治らない理由・うちとの違い」を説明できたか？</label></div>
+        <div class="ci"><input type="checkbox" id="h3"><label for="h3">施術前にペインスケール（10段階）で数値化したか？</label></div>
+        <div class="ci"><input type="checkbox" id="h4"><label for="h4">施術後に「さっきと違うの分かりますか？」と聞いて体感の変化を確認したか？（B/A）</label></div>
+        <div class="ci"><input type="checkbox" id="h5"><label for="h5">今日の説明・施術中の会話が全て主訴や悩みに繋がっていたか？</label></div>
+        <div class="ci"><input type="checkbox" id="h6"><label for="h6">「今始めるべき理由（緊急性）」を伝えられたか？</label></div>
+        <div class="ci"><input type="checkbox" id="h7"><label for="h7">改善期間と通院ペースの根拠を説明できたか？</label></div>
+        <div class="ci"><input type="checkbox" id="h8"><label for="h8">「最初だけ集中→良くなったらペースを落とす」先の見通しを伝えたか？</label></div>
+        <div class="ci"><input type="checkbox" id="h9"><label for="h9">患者さんの不安を確認してから料金・プランの説明に入ったか？</label></div>
+        <div class="ci"><input type="checkbox" id="h10"><label for="h10">患者さんの言葉を使って専門家としての提案を言い切れたか？</label></div>
+      </div>
+    </div>
+
+    <div class="cl-section">
+      <div class="cl-label b">❤️ 心の理解チェック<span class="cl-sublabel">（患者さんが何を話せたか・先生が感情を受け止められたか）</span></div>
+      <div class="checklist">
+        <div class="ci b"><input type="checkbox" id="e1"><label for="e1">【感情キャッチ】患者さんの感情が動いた瞬間（言葉・表情・トーン）を拾えたか？</label></div>
+        <div class="ci b"><input type="checkbox" id="e2"><label for="e2">【共感】「めちゃくちゃいいですね」「それは辛かったですね」など感情を乗せて返せたか？</label></div>
+        <div class="ci b"><input type="checkbox" id="e3"><label for="e3">【ねぎらい】患者さんが「分かってもらえた」と感じる言葉を返せたか？</label></div>
+        <div class="ci b"><input type="checkbox" id="e4"><label for="e4">【未来共有】患者さんの言葉をそのまま使って「そこを目標に一緒にやっていきましょう」と伝えられたか？</label></div>
+        <div class="ci b"><input type="checkbox" id="e5"><label for="e5">患者さんが理想の生活を自分の言葉で話せたか？（状態ではなく生活レベルの言葉が出たか）</label></div>
+        <div class="ci b"><input type="checkbox" id="e6"><label for="e6">患者さんが「なぜそうなりたいのか」（変わりたい理由）を話せたか？</label></div>
+        <div class="ci b"><input type="checkbox" id="e7"><label for="e7">患者さんが不安・迷いを安心して話せたか？（不安が出たら理由まで聞けたか）</label></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- パターン診断 -->
+<div class="card">
+  <div class="card-hdr"><span class="card-icon">🔍</span><div class="card-title">今日のパターン診断（当てはまるものを選ぶ・複数可）</div></div>
+  <div class="card-body">
+    <div class="pat-grid">
+      <div class="pat pa"><input type="checkbox" id="pa"><label for="pa">
+        <div class="pat-title">パターンA：頭は理解したが心が動かなかった</div>
+        <div class="pat-desc">説明は伝わったが患者さんの感情が動かなかった。患者さんが話す場面が少なかった。</div>
+        <div class="pat-fix">見直すポイント：患者さんが「そうそう！」と話す時間を作れたか。</div>
+      </label></div>
+      <div class="pat pb"><input type="checkbox" id="pb"><label for="pb">
+        <div class="pat-title">パターンB：心は動いたが未来が見えなかった</div>
+        <div class="pat-desc">会話は弾んだが「通い続けた先にどうなるか」が患者さんの中で描けなかった。</div>
+        <div class="pat-fix">見直すポイント：患者さんが理想の生活を自分の言葉で話せたか。</div>
+      </label></div>
+      <div class="pat pc"><input type="checkbox" id="pc"><label for="pc">
+        <div class="pat-title">パターンC：患者さんが理想をまだ言語化できていなかった</div>
+        <div class="pat-desc">「高い」「考えます」の背景に、通う目的がまだ患者さんの中で言葉になっていなかった。</div>
+        <div class="pat-fix">見直すポイント：「今のお体と比べて、どんな生活になったら嬉しいですか？」を聞けたか。</div>
+      </label></div>
+      <div class="pat pd"><input type="checkbox" id="pd"><label for="pd">
+        <div class="pat-title">パターンD：患者さんの不安が解消されていなかった</div>
+        <div class="pat-desc">不安の表面（「高い」「通えない」）は聞いたが、その背景にある本音まで引き出せなかった。</div>
+        <div class="pat-fix">見直すポイント：「一番何が気になっていますか？」と理由まで聞けたか。</div>
+      </label></div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <div class="pat pe" style="display:block;">
+        <input type="checkbox" id="pe">
+        <label for="pe" style="display:flex;align-items:flex-start;gap:10px;border-radius:8px;padding:12px 14px;border:2px solid #a0b8a0;background:#f0f5f0;cursor:pointer;transition:box-shadow .15s,transform .1s;user-select:none;">
+          <div style="padding-top:1px;">
+            <div class="pat-title" style="color:#3a5c3a;">その他・上記に当てはまらない場合</div>
+            <div class="pat-desc" style="color:#4a6a4a;">A〜Dのどれにも当てはまらない時はここにチェックして、下の欄に状況を書いてください。</div>
+          </div>
+        </label>
+      </div>
+      <div id="pe-box" style="display:none;margin-top:8px;">
+        <textarea id="mPE" rows="3" placeholder="例）遠方のため来院頻度に制約があった&#10;例）同席していた家族の反応が冷たかった&#10;例）急性期で今日の判断が難しいタイミングだった" style="width:100%;border:1px solid #a0b8a0;border-radius:8px;padding:9px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13px;line-height:1.7;color:var(--text);background:#fff;resize:vertical;outline:none;transition:border-color .15s;min-height:56px;"></textarea>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- メモ -->
+<div class="card">
+  <div class="card-hdr"><span class="card-icon">📝</span><div class="card-title">振り返りメモ</div></div>
+  <div class="card-body">
+    <div class="memo-row">
+      <div class="memo-lbl">🧠 頭の理解 ── 良かったこと</div>
+      <textarea id="mHG" rows="3" placeholder="良い例）「施術前に首の可動域を確認して、施術後に同じ動作で比べてもらったら『全然違う』と言ってくれた」&#10;惜しい例）「説明がうまくできた」→ 何がうまくできたのかが分からない"></textarea>
+    </div>
+    <div class="memo-row">
+      <div class="memo-lbl">🧠 頭の理解 ── 悪かったこと・改善点</div>
+      <textarea id="mHB" rows="3" placeholder="良い例）「整体歴を聞けたが『なぜそこでは変わらなかったか』の説明に繋げられなかった」&#10;良い例）「体感変化が出なかった。施術前に比較基準を作っておけばよかった」"></textarea>
+    </div>
+    <div class="memo-row">
+      <div class="memo-lbl">❤️ 心の理解 ── 良かったこと</div>
+      <textarea id="mEG" rows="3" placeholder="良い例）「阿波踊りがきれいに踊りたいという言葉を引き出せて、クロージングでその言葉を使えた」&#10;良い例）「B/Aの変化の場面で患者さんと一緒に喜べて、そこから会話が弾んだ」"></textarea>
+    </div>
+    <div class="memo-row">
+      <div class="memo-lbl">❤️ 心の理解 ── 悪かったこと・改善点</div>
+      <textarea id="mEB" rows="3" placeholder="良い例）「整体不信の話が出た時に、なぜ不信なのかを聞く前にすぐ説明に入ってしまった」&#10;良い例）「費用の話が出た時に『どちらが気になりますか？』と聞けずそのまま終わった」"></textarea>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="question-box">
+      <div class="q-hdr">🎯 次回意識すること・実践すること（1つだけ）</div>
+      <div class="rule-note" style="margin-bottom:8px;">具体的に1つだけ決める。「頑張る」ではなく「何を・どの場面で・どうするか」まで書く。</div>
+      <textarea id="mNext" rows="2" placeholder="例）患者さんが理想を話してくれた瞬間に、言葉だけでなくテンションも上げて全力で共感する&#10;例）「考えます」が出たら説明せずに「一番何を考えたいですか？」と理由を聞く"></textarea>
+    </div>
+
+  </div>
+</div>
+
+<!-- 自由記述 -->
+<div class="card free-note-card">
+  <div class="card-hdr"><span class="card-icon">🗒️</span><div class="card-title">自由記述（考え・補足など）</div></div>
+  <div class="card-body">
+    <textarea id="mFree" rows="5" placeholder="上記の項目に当てはまらない考えや補足があれば自由に書いてください。"></textarea>
+
+    <div style="margin-top:14px;">
+      <div class="score-row" style="margin-bottom:4px;">
+        <div class="score-lbl" style="width:auto;color:var(--sub);">🎯 自己評価点数</div>
+        <input type="range" id="scoreSelf" min="0" max="100" value="50" style="flex:1;accent-color:var(--text);cursor:pointer;" oninput="document.getElementById('vSelf').textContent=this.value;">
+        <div class="score-val" style="width:36px;color:var(--text);" id="vSelf">50</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">今日の対応を100点満点で自己評価する。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 出力 -->
+<div class="card">
+  <div class="card-body">
+    <div class="btn-row">
+      <button class="btn btn-c" id="btnGen">📋 振り返りをテキストにまとめる</button>
+      <button class="btn btn-s" id="btnReset">リセット</button>
+    </div>
+    <div class="output" id="out"></div>
+    <div class="tip">💡 送る前に確認：「次回意識すること・実践すること」が1つに絞れているか。患者さんの言葉が解釈されずそのまま書けているか。</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  function updateTotal() {
+    var h = parseInt(document.getElementById('scoreH').value);
+    var e = parseInt(document.getElementById('scoreE').value);
+    var t = h + e;
+    document.getElementById('scoreTotal').textContent = t;
+    var c = t>=16?'かなり高いレベルで出せている。':
+            t>=12?'だいぶ出せている。弱い方を重点的に練習しよう。':
+            t>=8 ?'半分は出せた。あと一歩。':
+            t>=4 ?'まだ伸びしろが大きい。次回に活かそう。':
+                  '今日は課題が多かった。一つずつ改善していこう。';
+    document.getElementById('scoreComment').textContent = c;
+  }
+  updateTotal();
+
+  // 施術者名を記憶して次回自動入力
+  var practEl = document.getElementById('mPractitioner');
+  try {
+    var savedPract = localStorage.getItem('furikaeri_practitioner');
+    if(savedPract) practEl.value = savedPract;
+  } catch(e){}
+  practEl.addEventListener('input', function(){
+    try { localStorage.setItem('furikaeri_practitioner', practEl.value.trim()); } catch(e){}
+  });
+
+  var pLabels = {
+    pa:'A：頭は理解したが心が動かなかった',
+    pb:'B：心は動いたが未来が見えなかった',
+    pc:'C：患者さんが理想をまだ言語化できていなかった',
+    pd:'D：患者さんの不安が解消されていなかった',
+    pe:'その他'
+  };
+
+  // その他チェックで自由記述欄をトグル
+  document.getElementById('pe').addEventListener('change', function() {
+    document.getElementById('pe-box').style.display = this.checked ? 'block' : 'none';
+  });
+
+  document.getElementById('btnGen').addEventListener('click', function() {
+    var staff   = document.getElementById('mStaff').value.trim();
+    var pract   = document.getElementById('mPractitioner').value.trim();
+    var name    = document.getElementById('mName').value.trim();
+    var age     = document.getElementById('mAge').value.trim();
+    var shuso   = document.getElementById('mShuSo').value.trim();
+    var planSel = document.querySelector('input[name="plan"]:checked');
+    var plan    = planSel ? planSel.value : '（未選択）';
+    var apptSel = document.querySelector('input[name="nextappt"]:checked');
+    var appt    = apptSel ? apptSel.value : '（未選択）';
+    var srcSel  = document.querySelector('input[name="source"]:checked');
+    var source  = srcSel ? srcSel.value : '（未選択）';
+    var info    = document.getElementById('mInfo').value.trim();
+    var komari  = document.getElementById('mKomari').value.trim();
+    var riso    = document.getElementById('mRiso').value.trim();
+    var fuan    = document.getElementById('mFuan').value.trim();
+    var impact  = document.getElementById('mImpact').value.trim();
+    var change  = document.getElementById('mChange').value.trim();
+    var qsel    = document.querySelector('input[name="question"]:checked');
+    var question = qsel ? qsel.value : '（未選択）';
+    var hg      = document.getElementById('mHG').value.trim();
+    var hb      = document.getElementById('mHB').value.trim();
+    var eg      = document.getElementById('mEG').value.trim();
+    var eb      = document.getElementById('mEB').value.trim();
+    var next    = document.getElementById('mNext').value.trim();
+    var free    = document.getElementById('mFree').value.trim();
+    var selfScore = document.getElementById('scoreSelf').value;
+    var sh      = document.getElementById('scoreH').value;
+    var se      = document.getElementById('scoreE').value;
+
+    var hd = 0, hdn = 0;
+    for(var i=1;i<=10;i++){ var el=document.getElementById('h'+i); if(el&&el.checked) hd++; else if(el) hdn++; }
+    var ed = 0, edn = 0;
+    for(var j=1;j<=7;j++){ var el2=document.getElementById('e'+j); if(el2&&el2.checked) ed++; else if(el2) edn++; }
+
+    var pats = [];
+    ['pa','pb','pc','pd','pe'].forEach(function(id){
+      if(document.getElementById(id).checked) {
+        var label = '・'+pLabels[id];
+        if(id === 'pe') {
+          var peText = document.getElementById('mPE').value.trim();
+          if(peText) label += '：' + peText;
+        }
+        pats.push(label);
+      }
+    });
+
+    var lines = ['【振り返りシート】'];
+    if(staff) lines.push('担当者：'+staff);
+    if(pract) lines.push('施術者：'+pract);
+    var patientInfo = [name, age, shuso].filter(Boolean).join('　');
+    if(patientInfo) lines.push('患者情報：'+patientInfo);
+    lines.push('プラン入会：'+plan);
+    lines.push('次回予約：'+appt);
+    lines.push('予約媒体：'+source);
+    if(info) lines.push('特徴・背景：'+info);
+    lines.push('');
+    lines.push('■ 患者さんの言葉（解釈なし・そのまま）');
+    lines.push('　😣 困っていること：'+(komari||'（未記入）'));
+    lines.push('　✨ 理想の生活：'+(riso||'（未記入）'));
+    lines.push('　🤔 不安・迷い：'+(fuan||'（未記入）'));
+    lines.push('　💬 一番印象に残った言葉：'+(impact||'（未記入）'));
+    lines.push('　🔄 印象が変わった場面：'+(change||'（未記入）'));
+    lines.push('　🙋 患者さんからの質問：'+question);
+    lines.push('');
+    lines.push('■ 自己スコア');
+    lines.push('　🧠 頭の理解：'+sh+'/10');
+    lines.push('　❤️ 心の理解：'+se+'/10');
+    lines.push('　総合：'+(parseInt(sh)+parseInt(se))+'/20');
+    lines.push('');
+    lines.push('■ チェック結果');
+    lines.push('　🧠 頭の理解：'+hd+'/10項目 チェック済み（未チェック'+hdn+'項目）');
+    lines.push('　❤️ 心の理解：'+ed+'/7項目 チェック済み（未チェック'+edn+'項目）');
+    lines.push('');
+    lines.push('■ パターン診断');
+    lines.push(pats.length ? pats.join('\n') : '・選択なし');
+    lines.push('');
+    lines.push('■ 🧠 頭の理解 ── 良かったこと');
+    lines.push(hg||'（未記入）');
+    lines.push('');
+    lines.push('■ 🧠 頭の理解 ── 悪かったこと・改善点');
+    lines.push(hb||'（未記入）');
+    lines.push('');
+    lines.push('■ ❤️ 心の理解 ── 良かったこと');
+    lines.push(eg||'（未記入）');
+    lines.push('');
+    lines.push('■ ❤️ 心の理解 ── 悪かったこと・改善点');
+    lines.push(eb||'（未記入）');
+    lines.push('');
+    lines.push('■ 次回意識すること・実践すること');
+    lines.push(next||'（未記入）');
+    lines.push('');
+    lines.push('■ 自由記述');
+    lines.push(free||'（未記入）');
+    lines.push('　🎯 自己評価点数：'+selfScore+'/100');
+
+    var text = lines.join('\n');
+    var out = document.getElementById('out');
+    out.style.display = 'block';
+    out.textContent = text;
+
+    var btn = document.getElementById('btnGen');
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(text).then(function(){
+        btn.textContent = '✅ コピーしました！';
+        setTimeout(function(){ btn.textContent = '📋 振り返りをテキストにまとめる'; }, 2000);
+      }).catch(function(){});
+    }
+  });
+
+  document.getElementById('btnReset').addEventListener('click', function() {
+    if(!confirm('入力内容をリセットしますか？')) return;
+    for(var i=1;i<=10;i++){ var el=document.getElementById('h'+i); if(el) el.checked=false; }
+    for(var j=1;j<=7;j++){ var el2=document.getElementById('e'+j); if(el2) el2.checked=false; }
+    ['pa','pb','pc','pd','pe'].forEach(function(id){ document.getElementById(id).checked=false; });
+    document.getElementById('pe-box').style.display='none';
+    document.getElementById('mPE').value='';
+    document.querySelectorAll('input[name="ratio"]').forEach(function(r){ r.checked=false; });
+    document.querySelectorAll('input[name="plan"]').forEach(function(r){ r.checked=false; });
+    document.querySelectorAll('input[name="nextappt"]').forEach(function(r){ r.checked=false; });
+    document.querySelectorAll('input[name="source"]').forEach(function(r){ r.checked=false; });
+    ['mStaff','mName','mAge','mShuSo','mInfo','mKomari','mRiso','mFuan','mImpact','mChange','mHG','mHB','mEG','mEB','mNext','mFree'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.querySelectorAll('input[name="question"]').forEach(function(r){ r.checked=false; });
+    document.getElementById('scoreSelf').value = 50;
+    document.getElementById('vSelf').textContent = 50;
+    document.getElementById('out').style.display='none';
+  });
+
+});
+</script>
+</body>
+</html>
