@@ -206,7 +206,11 @@ textarea:focus{border-color:var(--green);background:#fff;}
 <div class="card">
   <div class="card-hdr"><span class="card-icon">🧑</span><div class="card-title">患者情報</div></div>
   <div class="card-body">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div>
+        <div class="memo-lbl" style="margin-bottom:4px;">来院日</div>
+        <input type="date" id="mVisitDate" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--text);background:#fff;outline:none;transition:border-color .15s;">
+      </div>
       <div>
         <div class="memo-lbl" style="margin-bottom:4px;">名前</div>
         <input type="text" id="mName" placeholder="例）野口さん" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--text);background:#fff;outline:none;transition:border-color .15s;">
@@ -540,6 +544,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('btnGen').addEventListener('click', function() {
     var pract   = document.getElementById('mPractitioner').value.trim();
+    var visitDate = document.getElementById('mVisitDate').value.trim();
     var name    = document.getElementById('mName').value.trim();
     var age     = document.getElementById('mAge').value.trim();
     var shuso   = document.getElementById('mShuSo').value.trim();
@@ -586,6 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var lines = ['【振り返りシート】'];
     if(pract) lines.push('施術者：'+pract);
+    if(visitDate) lines.push('来院日：'+visitDate);
     var patientInfo = [name, age, shuso].filter(Boolean).join('　');
     if(patientInfo) lines.push('患者情報：'+patientInfo);
     lines.push('プラン入会：'+plan);
@@ -657,7 +663,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('input[name="plan"]').forEach(function(r){ r.checked=false; });
     document.querySelectorAll('input[name="nextappt"]').forEach(function(r){ r.checked=false; });
     document.querySelectorAll('input[name="source"]').forEach(function(r){ r.checked=false; });
-    ['mName','mAge','mShuSo','mInfo','mKomari','mRiso','mFuan','mImpact','mChange','mHG','mHB','mEG','mEB','mNext','mFree'].forEach(function(id){ document.getElementById(id).value=''; });
+    ['mVisitDate','mName','mAge','mShuSo','mInfo','mKomari','mRiso','mFuan','mImpact','mChange','mHG','mHB','mEG','mEB','mNext','mFree'].forEach(function(id){ document.getElementById(id).value=''; });
     document.querySelectorAll('input[name="question"]').forEach(function(r){ r.checked=false; });
     document.getElementById('scoreSelf').value = 50;
     document.getElementById('vSelf').textContent = 50;
